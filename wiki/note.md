@@ -154,7 +154,7 @@ git branch
 現在の状態を振り返りましょう。今までの時点で、masterブランチとその途中から派生する新しいブランチの2種類のブランチで進めてきました。<br>
 しかし、このまま並走し続けるわけにも行かないので、どこかで統合する必要があります。ここで出てくるのがmerge(マージ)です。今回は、masterブランチに新しく作ったブランチの変更内容をマージすることにしましょう。<br>
 今までのイメージと、今回のマージで目指すのは以下のような図です。
-<img src="" alt="merge image" height="300px"><br>
+<img src="https://raw.githubusercontent.com/Yu-HaruWolf/git-workshop-note/main/images/git_current_image_diagram.png" alt="merge image" height="300px"><br>
 それでは早速やっていきましょう。まずは、まとめる先のブランチに切り替える必要があります。ブランチの切り替えは以下のコマンドでできます。
 ```bash
 git switch master
