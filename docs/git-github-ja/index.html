@@ -1,0 +1,475 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Git / GitHub 入門ハンズオン</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/claat-public/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14" ga4id=""></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  codelab-ga4id=""
+                  id="git-github-ja"
+                  title="Git / GitHub 入門ハンズオン"
+                  environment="web"
+                  feedback-link="https://github.com/Yu-HaruWolf/git-workshop-note/issues">
+    
+      <google-codelab-step label="初めに" duration="2">
+        <p>このcodelabでは、GitとGitHubについての基礎を学びます。 GitやGitHubに関連する単語について解説し、実際に、Gitを操作していきます。 このcodelabを通して、GitやGitHubについて基本的な操作を1通り行うことができます。 ※このcodelabに出てくる図などは正確ではない場合があります。</p>
+<h2 is-upgraded>前提条件</h2>
+<ul>
+<li>インターネットに繋がるPC</li>
+<li>Google アカウント</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Gitって何？" duration="8">
+        <p>Gitは、プログラムのソースコードなどの変更履歴を記録・追跡するための分散型のバージョン管理システムです。Linux カーネルのような大規模なプロジェクトでも、スピードとデータサイズの両方の面で効率的に管理することができるように、2005年に開発されました。分散型のシステムなので、開発環境がオフラインでもほとんどの機能を利用することができます。また、古いバージョンのファイルを残しておきたい場合にも「file.txt」「新file.txt」のような管理をする必要はありません。</p>
+<h2 is-upgraded>バージョン管理システムとは？</h2>
+<p>話をシンプルにするために、まずは分散型という点を無視してお話します。 バージョン管理システムGitのイメージ図です。</p>
+<p class="image-container"><img style="width: 500.00px" src="img/161dc9be1094862.png"></p>
+<p>丸が登録されたファイルの履歴だと思ってください。 この例では、masterの行(ブランチ)に常に公開用のプログラムが含まれており、new-featureのブランチで新機能を開発しています。新機能の開発の途中で生まれたバグを新機能開発と同時並行で開発するために、bug-fixブランチを増やし、更にバグを直すために人手が必要と判断してbug-fix2のブランチを増やしています。バグ修正が終わったら元のブランチに統合し、新機能が完成したら、masterブランチに統合しています。具体的なイメージをしていると、統合の方法がイメージしづらいかもしれませんが、それは後ほど具体的な説明を行うので、今はなぜかきれいにくっついてしまうと思っていて大丈夫です。 また、これらの丸には全て固有のIDが振られており、いつでもその状態に戻って作業することができます。 これがバージョン管理システムのGitのイメージです。</p>
+<h2 is-upgraded>分散型とは？</h2>
+<p>続いて、分散型のイメージを確認しましょう。</p>
+<p class="image-container"><img style="width: 500.00px" src="img/fefb5b9b1610c906.png"></p>
+<p>先程確認したバージョン管理システムをサーバー上と、開発者それぞれで実行しているイメージです。基本的にはサーバー上で動作しているバージョン管理システムと同期させながら作業を進めていきますが、開発者はそれぞれ手元でバージョン管理システムが動作しているので、常に同期をさせる必要がありません。オンラインになったときに、各開発者がバージョン管理システムを同期させ、統合すれば良いのです。これがオフラインの開発環境下でも作業ができる理由です。こちらも統合がイメージしづらいかもしれませんが、またなぜかきれいにくっついてしまうと思っていて大丈夫です。</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Gitで出てくる単語" duration="3">
+        <p>ここからは実際の単語と動作を見ながら、基本的な流れを確認していきましょう。</p>
+<h2 is-upgraded>Repository(リポジトリ)</h2>
+<p>プロジェクトフォルダと言い換えるとわかりやすいかもしれません。バージョン管理をするフォルダそのもののことです。</p>
+<h2 is-upgraded>Stage(ステージ)</h2>
+<p>追加・変更したファイルをGitに登録するための準備場所です。コミットをする際は複数ファイルを登録することが多いです。ただ、変更をすべて登録したいわけではないかもしれません。そこでこのステージに追加するステップを挟むことで、任意のファイルの変更情報をコミットできるようになります。</p>
+<h2 is-upgraded>Commit(コミット)</h2>
+<p>ステージにあるファイルの変更情報をGitに登録することです。</p>
+<h2 is-upgraded>Branch(ブランチ)</h2>
+<p>直訳だと「枝」です。バージョン管理を枝分かれさせたものを指します。</p>
+<h2 is-upgraded>Merge(マージ)</h2>
+<p>並列して行っていた変更を1つにまとめることです。基本的には自動でまとめてくれますが、うまくいかないこともあるので、そこは開発者たちで判断していきましょう。</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Gitを使ってみる" duration="15">
+        <p>実はこれだけで自分1人の環境であれば最低限Gitが使えるようになります。<br> 早速試してみましょう。</p>
+<h2 is-upgraded>実行環境について</h2>
+<p>このコードラボでは、<a href="https://shell.cloud.google.com/?show=terminal" target="_blank">Google Cloud Shell</a>を使用することを推奨しています。 <a href="https://cloud.google.com/shell?hl=ja" target="_blank">Google Cloud Shell</a>はGoogle アカウントで持っている方であれば、誰でも無料で使うことができるクラウド上のターミナルになります。決済情報の登録も不要です。よく使用される開発環境があらかじめセットアップされた状態になっているので、とりあえず試したい時におすすめです。(しかも半永続の5GBのストレージ付きです！)</p>
+<p>もし、手元の環境でコードラボを続行する場合は以下の2つを準備してください。</p>
+<ul>
+<li><a href="https://git-scm.com/" target="_blank">Git</a></li>
+<li><a href="https://cli.github.com/" target="_blank">GitHub CLI</a></li>
+</ul>
+<p>(これらのインストールは難しくないので、ぜひ手元の環境でも使えるようにしましょう！)<br></p>
+<h2 is-upgraded>Gitの開始</h2>
+<p>まずは、Gitに関する設定を行います。 変更内容を記録する「コミット」をする際に、そのコミットが誰によるものなのかを記録しておく必要があります。 まずはその設定から行いましょう。</p>
+<p>次のコマンドで名前とメールアドレスを設定しましょう。これらの設定項目は基本的に公開されるものになります。</p>
+<pre><code language="language-bash" class="language-bash">git config --local user.name &#34;Your Name&#34;
+git config --local user.email &#34;example@example.com&#34;
+</code></pre>
+<p>※&#34;(ダブルクオーテーション)も必要です</p>
+<p>また、gitのデフォルトのブランチ名を「main」に変更しておくことを推奨します。 詳しい理由は説明しませんが、社会情勢的な理由があります。<br> 次のコマンドで変更できます。</p>
+<pre><code language="language-bash" class="language-bash">git config --global init.defaultBranch main
+</code></pre>
+<p>ここでは、「git-lab1」というディレクトリを作成し、Gitリポジトリにして作業します。</p>
+<pre><code language="language-bash" class="language-bash">mkdir git-lab1
+cd git-lab1
+</code></pre>
+<p>ディレクトリを作成したらカレントディレクトリ(現在のディレクトリ)を作成したディレクトリに変更するのをお忘れなく。<br> このディレクトリでGitを始めるには次のコマンドを実行するだけです。</p>
+<pre><code language="language-bash" class="language-bash">git init
+</code></pre>
+<p>シンプルですね。選択肢も出てきません。initはinitializeの略で、初期化する際に使用するコマンドでよく出てきます。<br> これでGitの準備が完了しました。</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="ファイルの変更を記録する" duration="20">
+        <p>設定ができたら、早速作業を始めていきましょう。まずは管理対象のファイルがないと始まりませんね。テキスト形式であればなんでもいいので、とりあえずファイルを作ってみましょう。(バイナリ形式のファイルも管理はできますが、Gitのマージ機能を活かせないのでここでは説明しません。)</p>
+<p>※任意のテキストエディタで何かファイルを作ってください。内容は挨拶や自己紹介など好きなものを書いてみましょう。できたら保存して、次のステップに進みましょう。</p>
+<p>次のコマンドでgitの状態がどうなっているか確かめましょう。</p>
+<pre><code language="language-bash" class="language-bash">git status
+</code></pre>
+<p>このようなテキストが表示されましたか？</p>
+<pre><code># 出力例です。コピーしないでください。
+On branch main 
+
+No commits yet
+
+Untracked files:
+  (use &#34;git add &lt;file&gt;...&#34; to include in what will be committed)
+        main.py
+
+nothing added to commit but untracked files present (use &#34;git add&#34; to track)
+</code></pre>
+<p>※今回はmain.pyというファイルを作成しました。<br> Untracked files(未追跡のファイル)に作成したファイル名が表示されていますか？もし表示されていない場合は、ファイルが正しく作成されているか確認してください。これ以降のこと全てにおいてそうですが、エラー文が出ている場合はGoogle等で検索したり友人に聞いてみてください。</p>
+<p>このままだとgitがファイルの変更を追跡してくれないので、gitにこのファイルの追加記録を書き込みましょう。まずは次のコマンドでステージにファイルを追加しましょう。</p>
+<pre><code language="language-bash" class="language-bash">git add main.py
+</code></pre>
+<p>※main.pyは作成したファイル名で実行してください。これ以降もファイル名が出てきた場合は、ご自身で作成されたファイル名に置き換えて実行してください。</p>
+<p>うまく行けば、何も表示されません。改めて、「git status」で状態を確認してみましょう。</p>
+<pre><code># 出力例です。コピーしないでください。
+On branch main
+
+No commits yet
+
+Changes to be committed:
+  (use &#34;git rm --cached &lt;file&gt;...&#34; to unstage)
+        new file:   main.py
+</code></pre>
+<p>Changes to be committed(コミットされる変更)に作成したファイルが追加されましたね。これがステージに追加された状態です。もし誤って変更記録に記録したくないファイルを追加した場合は、「<code>git rm –-cached main.py</code>」 でステージから削除してください。(ファイルは残ります)<br> ステージに追加できたら、gitに変更記録を記録しましょう。変更記録にはメッセージが必要になります。変更記録の内容を簡潔にまとめたものを指定できると良いでしょう。(メッセージの書き方はおおよそ決まったものがあり、検索すれば出てきますがここでは触れません。プロジェクト、組織単位でルールを決めて、お互いが分かりやすいものを使用すると良いでしょう。)<br> 次のコマンドでgitに変更記録を記録します。<br></p>
+<pre><code language="language-bash" class="language-bash">git commit --message &#34;Create a first file&#34;
+</code></pre>
+<p>これで記録すること(commit)ができました！コミットされた内容の概要が表示されます。コミットされた内容を確認してみましょう。<br> 記録された内容を確認するには次のコマンドを実行します。</p>
+<pre><code language="language-bash" class="language-bash">git log
+</code></pre>
+<p>次のようなものが出力されます。</p>
+<pre><code># 出力例です。コピーしないでください。
+commit fa72bb0cdf946f873668c715932e263f0342458b (HEAD -&gt; main)
+Author: Yuki &lt;yuki@haruwolf.dev&gt;
+Date:   Mon Nov 20 01:22:18 2023 +0000
+
+    Create a first file
+</code></pre>
+<p>全てのコミットには固有のIDが振られます。後ろについている「HEAD -&gt; main」では、HEADは現在の状態を表し、mainはブランチ名を表しています。あとは、コミットした人の名前とメールアドレス、コミットした日時、コミットメッセージが表示されていますね。これまで入力した内容が正しく表示されていればここまでバッチリです！<br> (ちなみにコミットで追加されたファイル、内容は何だったかを具体的に確認する方法がありますが、ひと目見ただけでは少しわかりにくいのでコマンド上で確認する方法はここでは触れません。オンラインのGitHub上で確認する方法は後ほど触れます。)</p>
+<h2 is-upgraded>TRY</h2>
+<p>この後のハンズオンのためにも、次のことに挑戦してみましょう！</p>
+<ul>
+<li>コミットしたファイルを変更しましょう。</li>
+<li>変更内容をコミットしましょう。 <ul>
+<li>(実はgit addをしなくても、変更された全てのファイルを一発でコミットする方法があります。ここまで余裕だった方は調べて挑戦してみましょう。)</li>
+</ul>
+</li>
+<li>コミットできていることを確認しましょう。</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="過去の変更に遡って編集する" duration="10">
+        <p>コーディングをしていると、時々とんでもない量のエラーと遭遇して直せなくなってしまった時、うまく動いていた時に戻りたい時があるかもしれません。gitならそれができちゃいます。早速やってみましょう。<br> ここまでの内容をしっかりとやってもらえていれば、既にコミットは2回以上行っているはずです。<br> 現在の状態から過去のコミットに遡るには次のコマンドを実行します。</p>
+<pre><code language="language-bash" class="language-bash">git switch --detach fa72bb0cdf946f873668c715932e263f0342458b
+</code></pre>
+<p>とんでもなく長いコマンドが出てきましたね。2番目の引数として入っている「fa72bb...(略)」というような文字列を見た覚えはありますか？これはcommitに割り当てられていた固有IDですね。長いので、「git log」からコピペしてしまいましょう。<br> なお、この時点でコミットしていない変更があると遡ることができません。一時的に退避しておく方法もありますが、後ほど説明するので、ここではコミットで対処しておくことをおすすめします。<br> switchを実行したら、作成したファイルが過去の状態に戻っているか確認してください。<br> 戻ったら、その状態から編集作業を始めたいところですが、実はこのまま始めると結構危ないんです。今過去の変更に遡ったので、ここから変更を行うと、今まで行ってきた変更とは別の時系列へと進んでいくことになります。この時系列に名前を付けないと、元の時系列に戻ったときに変更を失ってしまう可能性が高いです。(detach-切り離し状態)なので、新しくできる時系列(branch)に名前を付けましょう。コミットメッセージと同様に、branch名にも様々な命名規則があります。こちらもここでは触れないので、ぜひ調べて、プロジェクト・組織単位で揃えてください。<br> 次のコマンドを実行して、branchに名前を付けます。</p>
+<pre><code language="language-bash" class="language-bash">git switch --create dev-newMessage
+</code></pre>
+<p>実行したら、次のコマンドを実行して、作成したbranchとmain branchの両方があるかどうか確認しましょう。</p>
+<pre><code language="language-bash" class="language-bash">git branch
+</code></pre>
+<p>また、次のように、新しく作ったブランチが指定されていることを確認してください。(* がブランチ名の前についていれば指定されています。)</p>
+<pre><code>* dev-newMessage
+  main
+</code></pre>
+<p>それでは、過去の状態から新しい変更を加えてみましょう。その際、次の条件を満たすような変更を加えてください。</p>
+<ul>
+<li>mainブランチ上で変更記録を行った変更と違う変更を加える。(変更の競合をさせます)</li>
+<li>mainブランチ上で作成していないファイルを作成する。</li>
+</ul>
+<p>条件を満たした変更が行えたら、コミットしてください。</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="変更を統合する" duration="15">
+        <p>現在の状態を振り返りましょう。今までの時点で、mainブランチとその途中から派生する新しいブランチの2種類のブランチで進めてきました。<br> しかし、このまま並走し続けるわけにも行かないので、どこかで統合する必要があります。ここで出てくるのがmerge(マージ)です。今回は、mainブランチに新しく作ったブランチの変更内容をマージすることにしましょう。<br> 今までのイメージと、今回のマージで目指すのは以下のような図です。<br><img alt="merge image" src="img/6d021a7f416ffc0f.png"><br> それでは早速やっていきましょう。まずは、まとめる先のブランチに切り替える必要があります。ブランチの切り替えは以下のコマンドでできます。</p>
+<pre><code language="language-bash" class="language-bash">git switch main
+</code></pre>
+<p>これでmainブランチでの作業に戻ってくることができました。ここに新しいブランチで作業していた内容をマージしましょう。マージは以下のコマンドでできます。</p>
+<pre><code language="language-bash" class="language-bash">git merge dev-newMessage
+</code></pre>
+<p>これできれいにくっつく、とは行きませんね。gitがマージする上で困るようにファイルを編集しているので、恐らく「CONFLICT」が起こっているのではないでしょうか。(もし起こっていない場合は、gitがうまくマージしてくれたか、そもそもうまくマージできていないかもしれません。ファイルの内容を確認してみて、どのような結果になっているか確認してください。)<br> ただ、全ての変更内容がうまくマージできなかったわけではありません。新しく作っていたファイルはmainブランチの作業内容に追加されているのが確認できると思います。開発者が確認するべきなのは、CONFLICTが起こった箇所です。実際にファイルの中身を見ていきましょう。</p>
+<pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+print(&#34;Hello, World!&#34;)
+=======
+print(&#34;Hello, Git!&#34;)
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev-newMessage
+</code></pre>
+<p>ファイルの中身がこのようになっているところが、CONFLICT(競合)が起こった箇所です。 イコールで競合した変更内容が区切られており、上下にはgitによる注釈が加えられています。上のHEADが現在の作業中のブランチ、下がマージ元のブランチの変更内容です。開発者はここをいい感じに直してあげればOKです。いい感じと言われるとアバウトですが、その時一番正しいと考えられる状態に直してあげると良いでしょう。<br> 直し終わり、gitによって作成された注釈等も削除し、記録して良い状態になったら、保存をして、いつものようにコミットを行います。マージすること自体も変更記録として記録をします。</p>
+<p>ここまで行ったことを<code>git log</code>で確認しましょう。ただ、分岐が発生したことで今までのままだと見にくいので、新たなオプションを加えます。</p>
+<pre><code language="language-bash" class="language-bash">git log --graph
+</code></pre>
+<p>このオプションを加えることで、今までのログに加え、どこでブランチを作成し、どこでマージされたのかが見やすくなります。<br></p>
+<p>ここまではGitのバージョン管理について扱ってきました。gitのバージョン管理の基本的なところはこれで扱えるようになりました。ここまでのことを軽くおさらいしましょう。</p>
+<ul>
+<li>Gitリポジトリの作成(git init)</li>
+<li>Gitに変更内容を記録(git commit)</li>
+<li>過去の内容に遡る(git switch –detach)</li>
+<li>新たなブランチを作成する(git switch –create)</li>
+<li>2つのブランチを1つのブランチにまとめる(git merge)</li>
+</ul>
+<p>この後は共同開発で使っていくための機能について、説明します。ここからはGitHubを使用するので、まだGitHubのアカウントをお持ちでない方はここで作成しましょう。一旦一休みしましょう。🍵</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="GitHubを使ってみる" duration="10">
+        <h2 is-upgraded>GitHubって何？</h2>
+<p>GitHubはソフトウェア開発のプラットフォームで、ソースコードをホスティングしてくれます。コードのバージョン管理システムにGitを使用しており、オンライン上のリポジトリ(リモートリポジトリ)としても使用できます。<br><img alt="Git collaborate image" src="img/fefb5b9b1610c906.png"><br> 単にホスティングを行ってくれるだけではなく、コードのレビューや、プロジェクト管理、ドキュメント管理、継続的インテグレーションなど、開発を行う上で様々な所でサポートを行ってくれます。最近では、AIを活かしたCopilot機能もリリースされています。今回は扱いませんが、興味がある方はぜひ調べてみてください。<br></p>
+<h2 is-upgraded>GitHubに登録する</h2>
+<p>もし、GitHubのアカウントを持っていない方はアカウントの新規登録をしましょう。 メールアドレスとパスワード、ユーザー名の設定をするだけで登録できます。</p>
+<p><a href="https://github.com/signup" target="_blank">https://github.com/signup</a></p>
+<h2 is-upgraded>GitHubの認証情報をコンピュータに登録する</h2>
+<p>GitHubの認証情報を用いて手元で作成した内容をオンライン上にアップロードできるようにしましょう。<br> 今回は<a href="https://cli.github.com/" target="_blank">GitHub CLI</a>を用いて認証を行います。(Google Cloud Shellには既にインストールされています！)</p>
+<p>ターミナル上で、次のコマンドを実行します。</p>
+<pre><code language="language-bash" class="language-bash">gh auth login
+</code></pre>
+<p>次の表示が出るので、<code>GitHub.com</code>を選んだ状態でEnterを押してください。</p>
+<pre><code>? Where do you use GitHub?  [Use arrows to move, type to filter]
+&gt; GitHub.com
+  Other
+</code></pre>
+<p>このコードラボでは、<code>SSH</code>を選んだ状態でEnterを押してください。</p>
+<pre><code>? What is your preferred protocol for Git operations on this host?  [Use arrows to move, type to filter]
+  HTTPS
+&gt; SSH
+</code></pre>
+<p><code>Y</code>と入力し、Enterを押す。</p>
+<pre><code>? Generate a new SSH key to add to your GitHub account? (Y/n)
+</code></pre>
+<p>SSH keyのパスフレーズを決めます。(パスワードのような物です。)任意で設定なので、今回は何も入力せずにEnterを押します。</p>
+<pre><code>? Enter a passphrase for your new SSH key (Optional):
+</code></pre>
+<p>SSH keyのタイトルを決めます。こちらはユーザーが識別できるものであればよいのですが、何も入力しなくても、「GitHub CLI」という名前で登録されます。 今回は何も入力せずにEnterを押します。</p>
+<pre><code>? Title for your SSH key: (GitHub CLI)
+</code></pre>
+<p>GitHubへのログイン方法を聞かれます。 今回は<code>Login with a web browser</code>を選択してEnterを押します。</p>
+<pre><code>? How would you like to authenticate GitHub CLI?  [Use arrows to move, type to filter]
+&gt; Login with a web browser
+  Paste an authentication token
+</code></pre>
+<p>次のような画面が表示されます。</p>
+<pre><code>! First copy your one-time code: ABCD-0123
+Press Enter to open https://github.com/login/device in your browser...
+</code></pre>
+<p>Enterを押して、<a href="https://github.com/login/device" target="_blank">https://github.com/login/device</a>にアクセスします。 アカウントにログインし、表示されていたワンタイムコードを入力する。</p>
+<p>設定が完了すると、このような出力が表示されます。</p>
+<pre><code>✓ Authentication complete.
+- gh config set -h github.com git_protocol ssh
+✓ Configured git protocol
+! Authentication credentials saved in plain text
+✓ Uploaded the SSH key to your GitHub account: 
+✓ Logged in as Yu-HaruWolf
+</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Git(リモートリポジトリ)で出てくる単語" duration="5">
+        <p>ローカルで使用する語彙は既に触れましたが、リモートで使用する語彙がまだなので、ここで確認していきましょう。</p>
+<h2 is-upgraded>local / remote</h2>
+<p>gitにはローカルリポジトリとリモートリポジトリの2種類があり、これにより分散型の管理を実現しています。手元の端末上にあるリポジトリがローカルリポジトリ、GitHub等のサーバーで管理しているリポジトリがリモートリポジトリになります。</p>
+<h2 is-upgraded>clone</h2>
+<p>リモートリポジトリをローカルリポジトリにコピーをします。まだ、ローカルリポジトリで作業をしていない場合に使用します。</p>
+<h2 is-upgraded>push</h2>
+<p>ローカルリポジトリの内容をリモートリポジトリにアップロードすることです。</p>
+<h2 is-upgraded>fetch</h2>
+<p>リモートリポジトリからローカルリポジトリに変更内容を情報として同期させることです。</p>
+<h2 is-upgraded>pull</h2>
+<p>リモートリポジトリからローカルリポジトリに変更内容を同期させ、現在の作業内容にマージすることです。</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="作ったリポジトリをGitHubにアップロードする" duration="15">
+        <h2 is-upgraded>GitHubのリモートリポジトリを設定する</h2>
+<p>GitHubにリポジトリをアップロードできるように、まずはGitHub側の準備を整えましょう。<br><img alt="GitHub Home and click New" src="img/2a8a9c738e061a74.png"><br> GitHubの<a href="https://github.com" target="_blank">Dashboard</a>へ行くと、画面左上に緑色のNewと書いてあるボタンがあるのでクリックします。<br><img alt="GitHub create repository" src="img/fc1d5bd1b9e7150d.png"><br> 次の画面で、リポジトリ名と、公開するかどうかを設定します。<br>リポジトリ名はGitHubからランダムに提案されたものも選ぶことができます。<br>公開設定に関しては、チーム内だけで共有したいものはPrivateで設定しておくと良いでしょう。<br> 他にもREADMEを追加するかや、gitignoreについてもここで設定できますが、まだ触れていない内容なのでここでは無視します。<br> 設定ができたらCreate repositoryをクリックしてください。<br><img alt="GitHub get a repository url" src="img/4ce532d651816d10.png"><br> リポジトリを作成できたら、リモートリポジトリとしてアクセスするためのURLを取得します。<br> 先程のGitHubへのログインコマンドでは、HTTPSではなく、SSHを選択したので、SSHのURLをコピーしてください。<br></p>
+<p>URLが取得できたらシェルに戻ってリモートリポジトリを追加します。<br> リモートリポジトリの追加は以下のコマンドで行います。<br></p>
+<pre><code language="language-bash" class="language-bash">git remote add origin &lt;URL&gt;
+</code></pre>
+<p>originはローカルでリモートリポジトリを識別するための名前です。一般的にoriginが使われることが多いです。<br> 複数のリモートリポジトリを1つのローカルリポジトリで使う場合は名前を変えることがあります。<br> &lt;URL&gt;は取得したURLに置き換えてください。<br></p>
+<h2 is-upgraded>pushする</h2>
+<p>リモートリポジトリの追加とブランチ名の変更ができたらいよいよpushします。<br> pushは以下のコマンドで行います。<br></p>
+<pre><code language="language-bash" class="language-bash">git push --set-upstream origin main
+</code></pre>
+<p>コマンドの内容はoriginとして設定されているリモートリポジトリに、mainブランチをpushするということになります。<br><code>--set-upstream</code>というオプションが指定されていますが、これはmainブランチのデフォルトのpush先としてoriginを指定しておくという意味になります。これで次回以降は<code>git push</code>だけでpushできるようになります。</p>
+<h2 is-upgraded>pushした内容をWeb上で確認する。</h2>
+<p>GitHub上で作成したリポジトリのページを開いていますか？まだ開いている場合は再読み込みしましょう。<br> もし閉じてしまった場合は、<a href="https://github.com" target="_blank">github.com</a>にアクセスして、ページの左からリポジトリを選択してください。<br> pushした内容がWeb上で確認できましたか？</p>
+<h2 is-upgraded>変更内容を確認する。</h2>
+<p><img alt="GitHub point commit" src="img/75a4922162477d5c.png"><br> ファイル一覧の右上にある~ commitsをクリックしてみましょう。過去のコミット履歴を見ることができます。また、各コミットの変更内容を確認することもでできます。<br> ただコミット1つ1つを見ていくのは大変なので、コミットメッセージでしっかりと伝わるようにすることを意識していきましょう。<br></p>
+<p>なお、コミットメッセージは1行だけではなく、複数行設定することができます。<br> 以下のようにメッセージの引数を複数作ることで、複数行設定できます。</p>
+<pre><code language="language-bash" class="language-bash">git commit --message &#34;Commit message&#34; --message &#34;&#34; --message &#34;Description of commit&#34;
+</code></pre>
+<p>なお、一般的に1行目にコミット内容の簡潔な説明をし、2行目は空行にし、3行目以降で具体的な説明を行います。<br> GitHub上で表示されるのは1行目のコミットメッセージが主に表示され、3行目以降はコミットの詳細を確認した際に表示されます。</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="リポジトリをcloneする" duration="5">
+        <p>作成したリモートリポジトリを別の人/パソコンにcloneしてみましょう。とはいえ、いきなり別の人やパソコンを用意するのは大変なので、今回は別のフォルダにクローンすることにしましょう。(ローカルリポジトリは各フォルダに.gitフォルダを生成して管理するのでこの方法でも競合する等は発生しないはずです。)<br> cloneを行う前に、次のコマンドなどで、作業ディレクトリをリポジトリの外に移動してください。<br></p>
+<pre><code language="language-bash" class="language-bash">cd ..
+</code></pre>
+<p>リモートリポジトリをローカルにクローンするには以下のコマンドを実行します。</p>
+<pre><code language="language-bash" class="language-bash">git clone &lt;URL&gt; &lt;directory name&gt;
+</code></pre>
+<p>&lt;directory name&gt;は省略可能です。省略した場合は、リポジトリ名が使用されます。クローンするためのフォルダは空であることが必須です。<br> 同じリポジトリが2つになりましたか？なお、cloneしたリポジトリにはあらかじめremoteのoriginにcloneで使用したURLが設定されています。(ただし、たまに設定されていないことがあるらしいです。)</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="変更をリモートリポジトリ経由で反映する" duration="30">
+        <p>GitHubにリポジトリをアップロードし、ローカルにも2つのリポジトリができたので、リモート経由で変更を反映してみましょう。<br> 本来であれば、誰かが変更を加えてくれるものですが、今回は自分自身で加えることにしましょう。<br> 次の作業のために以下のことを行ってください。<br></p>
+<ul>
+<li>1つ目のリポジトリで変更を加え、commitし、pushまで行ってください。</li>
+<li>2つ目のリポジトリで変更を加え、commitしてください。(pullやpushはしなくて大丈夫です。この後やります。)</li>
+</ul>
+<p>変更を加えコミットをできしても、現時点ではリモートリポジトリ上にpushされた変更内容がローカルにたどり着いていないので、この状態でpushをしても拒否されてしまいます。<br> なので、1つ目のローカルリポジトリの変更を2つ目のローカルリポジトリに反映、すなわち、変更情報をリモートリポジトリとローカルリポジトリで同期させます。<br> 変更情報の同期は以下のコマンドで実行できます。</p>
+<pre><code language="language-bash" class="language-bash">git fetch
+</code></pre>
+<p>同期ができると、追加された情報が出力されます。<br><code>git status</code>を実行すると、リモートとローカルの間に何コミット分差があるのかも確認することができます。<br> ただ、このままの状態だと変更した情報がローカルに来ただけで、作業内容に反映されていないので、反映された後から作業するためには、mergeする必要があります。この時にmergeコマンドを使用する場合は、ブランチ名等を指定しないで大丈夫です。</p>
+<pre><code language="language-bash" class="language-bash">git merge
+</code></pre>
+<p>ここでCONFLICTが発生した場合は、解決を行いましょう。<br> なお、CONFLICTが発生した箇所全てで作業中だったものを使用したい場合は以下のコマンドでも解決することができます。</p>
+<pre><code language="language-bash" class="language-bash">git checkout --ours
+</code></pre>
+<p>逆に、マージしようとしている方の内容を残したい場合は、以下のコマンドで解決できます。</p>
+<pre><code language="language-bash" class="language-bash">git checkout --theirs
+</code></pre>
+<p>これらのコマンドは後ろにファイル名を追加して使用することで、一部ファイルだけを指定して残すことができます。バイナリファイルはこのコマンドを使って選択しましょう。</p>
+<p>ここまでの内容で、分散型のGitを利用できるようになりました。<br> 同じ動作を行いつつ、少し違うやり方も確認していきましょう。</p>
+<ul>
+<li>fetchとmergeをしたリポジトリで変更を加え、commit, pushしましょう。</li>
+</ul>
+<p><code>cd</code>コマンドを利用し、またもう片方のローカルリポジトリのあるディレクトリに移動しましょう。 先程はfetchとmergeを分けて実行しましたが、これらのコマンドはよくセットで実行されます。なので、それ専用のコマンドが用意されています。</p>
+<pre><code language="language-bash" class="language-bash">git pull
+</code></pre>
+<p>このコマンドを実行すると、fetchとmergeがセットで実行されます。<br> 普段はpullで済ませてしまうことが多いと思います。</p>
+<p>ここまでで、GitHubをリモートリポジトリとして扱い、Gitを共同開発で使うための基本的なことを学びました。 ここまでのことを軽くおさらいしましょう。</p>
+<ul>
+<li>GitHubの認証の設定</li>
+<li>GitHubのリポジトリ設定</li>
+<li>GitHubにコードをアップロードする(git push)</li>
+<li>GitHubでコミットした内容と変更を確認する</li>
+<li>GitHubからソースコードを手元にコピーする</li>
+<li>GitHubから変更を取得する(git fetch / git merge -&gt; git pull)</li>
+<li>変更が競合したら解決する。</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="GitHub Features" duration="0">
+        <h2 is-upgraded>はじめに</h2>
+<p>ここからはGitHubのWeb上で使える機能について説明していきます。ただし、1個ずつ触っていくと時間がかかってしまうので、ここではざっくりとだけの説明になります。時間がある時に色々触ってみてください。</p>
+<h2 is-upgraded>共同開発者の追加</h2>
+<p>プライベートでリポジトリを作成した場合、外部の人からはアクセスすることができません。しかし、他の人と共同開発したいとき、他の人がアクセスできない状態だと困ってしまいます。<br> なので、共同開発者の追加を行いましょう。<br><img src="img/6a7d024e2547c22a.png"><br> リポジトリのページに行き、「Settings」→「Collaborators」→「Add people」の順番でクリックします。出てきた入力欄に、追加したい人のユーザー名、名前、メールアドレスのいずれかを入力します。選択したら「Add ~ to this repository」をクリックします。<br> これで追加する側の設定は終わりです。追加される側は承認する必要があります。<br> GitHubの右上のお知らせボックスのアイコンに招待が届いています。<br> 招待を開き、「Accept invitaiton」で招待を承認できます。<br></p>
+<h2 is-upgraded>issues</h2>
+<p>チーム開発の中では、様々な課題や取り組まなければいけないこと、議論すべきことなどが出てきます。そのようなことをまとめる仕組みがGitHubには予め備わっています。<br> リポジトリページの「Issues」から「New issue」を選択し、取り組むことや課題を登録してみましょう。こちらは人が見るためのものなので、チームメンバーがわかるように書いておけばOKです。また、Issueには担当者やラベルを設定することもできます。ぜひチームのタスク管理に役立ててください。</p>
+<h2 is-upgraded>pull request</h2>
+<p>GitでMergeの概念ややり方は既に学習しましたね。<br> 共同開発でも当然複数ブランチに分かれて、最終的に1つのブランチにまとめることはよくあります。しかし、誰か1人の判断でMergeをしてしまうと、予期せぬエラーが発生したり、バグが残されたままになってしまうリスクもあります。そこで、他の人にMergeをしてもよいか確認を求めるpull requestという機能があります。<br> Pull requestでもissueと同様に議論をしたり、担当者を設定することもできます。<br> Pull requestを作成するには、リポジトリページの「Pull requests」をクリックし、「New pull request」をクリックします。次の画面で、「base」と「compare」を選択します。baseで選んだブランチにcompareで選んだブランチがマージされます。<br> 2つのブランチの比較が表示されます。そのまま「Create pull request」をクリックして進めます。タイトルと説明を加え、「Create pull request」を加えたら作成完了です。<br> チームメンバーと相談し、問題がなければ「Merge pull request」でマージすることができます。自動マージできない場合はオンライン上でコンフリクトを解消することができます。<br> 「Close pull request」をマージをせずにPull requestを拒否します。<br> なお、GitHubに詳しい方が管理しているリポジトリだと、「Merge pull request」がすぐに押せないようになっていることがあります。これは、コードの規約チェックやビルドチェックを含んでいたり、他のメンバーによる承認が必要な設定にしてあることが理由です。デフォルトで有効になっている設定ではないので、なにか問題がある場合は、そのリポジトリの管理者に確認してください。</p>
+<h2 is-upgraded>Wiki</h2>
+<p>リポジトリにWikiページを紐づけておくことができます。<br> もし、チームで常に共有しておくべきルール等があれば、ここに書き残しておくのが良いかもしれません。<br> ブラウザ上で編集/保存ができるので、特に説明することはありません<br></p>
+<h2 is-upgraded>Actions</h2>
+<p>具体的な説明は難しくなってしまうので、概念だけ説明します。<br> チーム開発における定期的に行われるタスクを自動化できる機能です。<br> 例えば、皆様に今読んでいただいているこのドキュメントもActionsを使用しています。<br></p>
+<h2 is-upgraded>GitHub Pages</h2>
+<p>実はGitHubは動的なWebページでなければホストしてくれちゃいます。<br> ただし、本番運用向けではないので注意してください。<br> なお、リポジトリの公開状況に関わらず、GitHub Pagesの内容は公開されます。<br> ちょっとしたプログラムを見せるだけであればかなり有用な機能なので、ぜひ使ってみてください。</p>
+<h2 is-upgraded>Web Editor</h2>
+<p>実はGitHubはオンライン上で編集できてしまいます。<br> リポジトリのCodeページでキーボードの「.(ドット)」を押してみましょう。<br> Visual Studio CodeがベースのWeb Editorが表示されます。<br> 簡易的な変更であれば、これでできてしまいます。なお、保存するだけだと変更内容を失う可能性があるので、必ずコミットするようにしてください。(Web Editorの場合、コミットすると自動的にプッシュもされます。)<br> なお、ターミナルを開いたり、プログラムの実行は行えません。これらをクラウド上で行いたい場合は、この後説明するCodespaceを利用してください。<br></p>
+<h2 is-upgraded>Codespace</h2>
+<p>Web Editorをクラウド上でホストするようにしたものです。<br> クラウド上で端末が動いているので、プログラムの実行やターミナルも利用できます。<br> ただし、クラウド上で動作する分、一定利用時間/容量を超えると有料になります。初期設定では勝手に課金されることはありませんが、利用制限がかかります。<br> また、一定期間利用されない状態が続くと自動的に削除されてしまうので、大事なデータはプッシュしておくか、保存しないようにしましょう。<br></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Tips(Git)" duration="0">
+        <p>ここからはGitに関するTipsです。</p>
+<h2 is-upgraded>.gitignore</h2>
+<p>プロジェクトを進めていると、バージョン管理をしたくないファイルが出てくることがあります。例えば、プログラムからビルドしたデータや、環境構築すると自動的に生成されるファイルはバージョン管理をしてもあまり意味はなく、人によっては邪魔なものになる可能性もあります。<br> そのようなファイルを予めバージョン管理から外しておける機能が、<code>.gitignore</code>です。利用は簡単で、バージョン管理をしているフォルダに、<code>.gitignore</code>を作成し、その中にバージョン管理から外しておきたいファイル名やディレクトリ名を書いておくだけです。ワイルドカードや正規表現の[1-9]も使えます。<br> ただ、慣れていないと何をバージョン管理から外しておけばよいのかわからないかもしれません。そのような方向けに、GitHubから.gitignoreのレンプレートを用意してもらえています。リポジトリを作成するときも選択肢として.gitignoreの選択欄がありましたね。他にも、<a href="https://github.com/github/gitignore" target="_blank">github/gitignore</a>のリポジトリに行けば、いつでもgitignoreのテンプレートを取得することができます。<br> ただし、後からgitignoreにファイルを追加しても、一度コミットされた内容が削除されることはないので、注意してください。<br> .gitignoreは通常のファイルと同じようにコミットしてプッシュします。</p>
+<h2 is-upgraded>Gitを使っている時に失敗をしてしまったときは？</h2>
+<p>バージョン管理システムが動いている状態なら、失敗してしまったことをもとに戻せる可能性があります。<br> 次のコマンドで、そのリポジトリで起きたことの一覧を表示できます。</p>
+<pre><code language="language-bash" class="language-bash">git reflog
+</code></pre>
+<p>戻したい地点の固有IDを見つけ、チェックアウトします。</p>
+<pre><code language="language-bash" class="language-bash">git checkout &lt;ID&gt;
+</code></pre>
+<p>もしかしたら、これで失敗を取り返せるかもしれません。(もちろん万能ではないので頼りすぎないでください！)</p>
+<h2 is-upgraded>ファイルを変更したけれど、やっぱり元に戻したいとき</h2>
+<p>ファイルをコミットの状態に戻したい場合は次のコマンドで戻すことができます。</p>
+<pre><code language="language-bash" class="language-bash">git restore &lt;File name&gt;
+</code></pre>
+<h2 is-upgraded>ファイルを1つ1つaddするのが面倒</h2>
+<p>リポジトリ内全てのファイルを対象としたいときは、「.(ドット)」を利用することができます。</p>
+<pre><code language="language-bash" class="language-bash">git add .
+</code></pre>
+<h2 is-upgraded>間違えてコミットをしてしまった</h2>
+<p>間違えてコミットをしてしまったときは<code>git reset</code>が有効です。</p>
+<pre><code language="language-bash" class="language-bash">git reset --soft HEAD^
+</code></pre>
+<p>これで直前のコミットを取り消すことができます。<br><code>git reset</code>という新しいコマンドが出てきましたが、こちらは使い方を誤ると作業内容を吹き飛ばしてしまうコマンドなので、入門の内容としては扱いませんでした。興味があれば調べてみてください。</p>
+<h2 is-upgraded>マージが終わったブランチはどうする？</h2>
+<p>基本的に消すのが一般的だそうです。不要なブランチが乱立していると、管理が大変になってしまうことが理由としてあげられます。<br> なお、コミットを消すということではないので、コミットのログさえたどることができれば、また戻ることができます。<br> ブランチの削除は以下のコマンドで行なえます。</p>
+<pre><code language="language-bash" class="language-bash">git branch --delete &lt;Branch name&gt;
+</code></pre>
+<p>なお、GitHubのPull requestを用いてマージを行った場合は、マージを行った後、ブランチの削除のボタンが出てきます。<br> ローカルとリモートではブランチの削除状況が自動的に同期されないので、注意してください。</p>
+<h2 is-upgraded>コマンドを打ち続けるのは大変</h2>
+<p>安心してください。大抵のコード エディターにはバージョン管理のための機能がついています。<br> そのため、今回ほどコマンドを大量に打つことはしなくても大丈夫です。ただ、Git独自の単語はGUIのものでも出てくるので、今回のコマンドから単語を覚えていただけていれば幸いです。<br> また、細かい動作を行う場合はやはりコマンドが一番融通が効くので、その意味でも今回はコマンドで行いました。 エディターには「VCS」や「Version Control」、Gitのイメージアイコンで機能が用意されていることが多いです。探してみてください。<br></p>
+<h2 is-upgraded>ブランチはどのように分ければ良い？</h2>
+<p>基本的には、チームで分け方を決めておくと良いと思います。<br> ただいきなりそんなことを決めようとなってもイメージがつきにくいと思うので、一例にはなりますが、Git Flowを紹介したいと思います。</p>
+<p>Git Flowでは以下のようなブランチを用意します。</p>
+<ul>
+<li>master(main) ブランチ <ul>
+<li>リリース用のブランチ</li>
+<li>このブランチでは直接作業しない</li>
+</ul>
+</li>
+<li>develop ブランチ <ul>
+<li>開発用のブランチ</li>
+<li>コードが安定し、リリース準備が整ったら、releaseブランチへマージする</li>
+<li>このブランチでは直接作業しない</li>
+</ul>
+</li>
+<li>feature ブランチ <ul>
+<li>機能の追加用ブランチ</li>
+<li>developブランチから分岐する</li>
+<li>リリース準備ができたらreleaseへマージする。</li>
+</ul>
+</li>
+<li>hotfix ブランチ <ul>
+<li>リリース後の緊急対応用ブランチ</li>
+<li>masterブランチから分岐する</li>
+<li>解決したら、masterブランチにマージすると共に、developブランチにもマージする</li>
+</ul>
+</li>
+<li>release ブランチ <ul>
+<li>リリース準備用のブランチ</li>
+<li>リリース準備が整ったら、masterブランチにマージすると共に、developブランチにもマージする</li>
+</ul>
+</li>
+</ul>
+<p>全てのブランチを全てチームで守るようにする必要はありませんが、これらを守るようにしておくとチーム内での衝突が起きにくくなったり、本番環境と開発環境の区別が明確になったりします。<br> 他にも、ブランチの種類を最小限にしたGitHub Flow等もあります。ぜひ、チームに合ったスタイルを見つけてください。</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="終わりに" duration="0">
+        <p>これで内容は終わりです。お疲れ様でした。皆様のチーム開発に役立つことができれば幸いです。<br> 私自身Gitを完璧に扱える人ではないので、誤った情報や不足している情報があるかもしれません。<br> よろしければ、IssueやPull requestで修正点を教えていただけると非常に助かります。<br></p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="https://storage.googleapis.com/claat-public/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/prettify.js"></script>
+  <script src="https://storage.googleapis.com/claat-public/codelab-elements.js"></script>
+  <script src="//support.google.com/inapp/api.js"></script>
+
+</body>
+</html>

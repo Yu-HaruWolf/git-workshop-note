@@ -1,0 +1,21 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2025-06-25T14:30:48Z",
+  "id": "git-github-ja",
+  "duration": 138,
+  "title": "Git / GitHub 入門ハンズオン",
+  "authors": "Yuki",
+  "summary": "Git / GitHub 入門ハンズオン",
+  "source": "codelab-ja.md",
+  "theme": "",
+  "status": null,
+  "category": null,
+  "tags": [
+    "web"
+  ],
+  "feedback": "https://github.com/Yu-HaruWolf/git-workshop-note/issues",
+  "url": "git-github-ja"
+}
