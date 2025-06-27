@@ -81,8 +81,8 @@ Duration: 0:15:00
 
 次のコマンドで名前とメールアドレスを設定しましょう。これらの設定項目は基本的に公開されるものになります。
 ```bash
-git config --local user.name “Your Name”
-git config --local user.email “example@example.com”
+git config --global user.name “Your Name”
+git config --global user.email “example@example.com”
 ```
 ※”(ダブルクオーテーション)も必要です
 
