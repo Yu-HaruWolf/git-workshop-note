@@ -165,10 +165,10 @@ Date:   Mon Nov 20 01:22:18 2023 +0000
     
       <google-codelab-step label="過去の変更に遡って編集する" duration="10">
         <p>コーディングをしていると、時々とんでもない量のエラーと遭遇して直せなくなってしまった時、うまく動いていた時に戻りたい時があるかもしれません。gitならそれができちゃいます。早速やってみましょう。<br> ここまでの内容をしっかりとやってもらえていれば、既にコミットは2回以上行っているはずです。<br> 現在の状態から過去のコミットに遡るには次のコマンドを実行します。</p>
-<pre><code language="language-bash" class="language-bash">git switch --detach fa72bb0cdf946f873668c715932e263f0342458b
+<pre><code language="language-bash" class="language-bash">git checkout fa72bb0cdf946f873668c715932e263f0342458b
 </code></pre>
 <p>とんでもなく長いコマンドが出てきましたね。2番目の引数として入っている「fa72bb...(略)」というような文字列を見た覚えはありますか？これはcommitに割り当てられていた固有IDですね。長いので、「git log」からコピペしてしまいましょう。<br> なお、この時点でコミットしていない変更があると遡ることができません。一時的に退避しておく方法もありますが、後ほど説明するので、ここではコミットで対処しておくことをおすすめします。<br> switchを実行したら、作成したファイルが過去の状態に戻っているか確認してください。<br> 戻ったら、その状態から編集作業を始めたいところですが、実はこのまま始めると結構危ないんです。今過去の変更に遡ったので、ここから変更を行うと、今まで行ってきた変更とは別の時系列へと進んでいくことになります。この時系列に名前を付けないと、元の時系列に戻ったときに変更を失ってしまう可能性が高いです。(detach-切り離し状態)なので、新しくできる時系列(branch)に名前を付けましょう。コミットメッセージと同様に、branch名にも様々な命名規則があります。こちらもここでは触れないので、ぜひ調べて、プロジェクト・組織単位で揃えてください。<br> 次のコマンドを実行して、branchに名前を付けます。</p>
-<pre><code language="language-bash" class="language-bash">git switch --create dev-newMessage
+<pre><code language="language-bash" class="language-bash">git checkout -b dev-newMessage
 </code></pre>
 <p>実行したら、次のコマンドを実行して、作成したbranchとmain branchの両方があるかどうか確認しましょう。</p>
 <pre><code language="language-bash" class="language-bash">git branch
@@ -210,8 +210,8 @@ print(&#34;Hello, Git!&#34;)
 <ul>
 <li>Gitリポジトリの作成(git init)</li>
 <li>Gitに変更内容を記録(git commit)</li>
-<li>過去の内容に遡る(git switch –detach)</li>
-<li>新たなブランチを作成する(git switch –create)</li>
+<li>過去の内容に遡る(git checkout)</li>
+<li>新たなブランチを作成する(git checkout -b)</li>
 <li>2つのブランチを1つのブランチにまとめる(git merge)</li>
 </ul>
 <p>この後は共同開発で使っていくための機能について、説明します。ここからはGitHubを使用するので、まだGitHubのアカウントをお持ちでない方はここで作成しましょう。一旦一休みしましょう。🍵</p>
@@ -316,7 +316,7 @@ Press Enter to open https://github.com/login/device in your browser...
 <pre><code language="language-bash" class="language-bash">cd ..
 </code></pre>
 <p>リモートリポジトリをローカルにクローンするには以下のコマンドを実行します。</p>
-<pre><code language="language-bash" class="language-bash">git clone &lt;URL&gt; &lt;directory name&gt;
+<pre><code language="language-bash" class="language-bash">git clone &lt;URL&gt; &lt;directory name(Optional)&gt;
 </code></pre>
 <p>&lt;directory name&gt;は省略可能です。省略した場合は、リポジトリ名が使用されます。クローンするためのフォルダは空であることが必須です。<br> 同じリポジトリが2つになりましたか？なお、cloneしたリポジトリにはあらかじめremoteのoriginにcloneで使用したURLが設定されています。(ただし、たまに設定されていないことがあるらしいです。)</p>
 
@@ -368,7 +368,7 @@ Press Enter to open https://github.com/login/device in your browser...
         <h2 is-upgraded>はじめに</h2>
 <p>ここからはGitHubのWeb上で使える機能について説明していきます。ただし、1個ずつ触っていくと時間がかかってしまうので、ここではざっくりとだけの説明になります。時間がある時に色々触ってみてください。</p>
 <h2 is-upgraded>共同開発者の追加</h2>
-<p>プライベートでリポジトリを作成した場合、外部の人からはアクセスすることができません。しかし、他の人と共同開発したいとき、他の人がアクセスできない状態だと困ってしまいます。<br> なので、共同開発者の追加を行いましょう。<br><img src="img/6a7d024e2547c22a.png"><br> リポジトリのページに行き、「Settings」→「Collaborators」→「Add people」の順番でクリックします。出てきた入力欄に、追加したい人のユーザー名、名前、メールアドレスのいずれかを入力します。選択したら「Add ~ to this repository」をクリックします。<br> これで追加する側の設定は終わりです。追加される側は承認する必要があります。<br> GitHubの右上のお知らせボックスのアイコンに招待が届いています。<br> 招待を開き、「Accept invitaiton」で招待を承認できます。<br></p>
+<p>プライベートでリポジトリを作成した場合、外部の人からはアクセスすることができません。しかし、他の人と共同開発したいとき、他の人がアクセスできない状態だと困ってしまいます。<br> なので、共同開発者の追加を行いましょう。<br><img src="img/6a7d024e2547c22a.png"><br> リポジトリのページに行き、「Settings」→「Collaborators」→「Add people」の順番でクリックします。出てきた入力欄に、追加したい人のユーザー名、名前、メールアドレスのいずれかを入力します。選択したら「Add ~ to this repository」をクリックします。<br> これで追加する側の設定は終わりです。追加される側は承認する必要があります。<br> GitHubの右上のお知らせボックスのアイコンに招待が届いています。<br> 招待を開き、「Accept invitation」で招待を承認できます。<br></p>
 <h2 is-upgraded>issues</h2>
 <p>チーム開発の中では、様々な課題や取り組まなければいけないこと、議論すべきことなどが出てきます。そのようなことをまとめる仕組みがGitHubには予め備わっています。<br> リポジトリページの「Issues」から「New issue」を選択し、取り組むことや課題を登録してみましょう。こちらは人が見るためのものなので、チームメンバーがわかるように書いておけばOKです。また、Issueには担当者やラベルを設定することもできます。ぜひチームのタスク管理に役立ててください。</p>
 <h2 is-upgraded>pull request</h2>
@@ -376,7 +376,7 @@ Press Enter to open https://github.com/login/device in your browser...
 <h2 is-upgraded>Wiki</h2>
 <p>リポジトリにWikiページを紐づけておくことができます。<br> もし、チームで常に共有しておくべきルール等があれば、ここに書き残しておくのが良いかもしれません。<br> ブラウザ上で編集/保存ができるので、特に説明することはありません<br></p>
 <h2 is-upgraded>Actions</h2>
-<p>具体的な説明は難しくなってしまうので、概念だけ説明します。<br> チーム開発における定期的に行われるタスクを自動化できる機能です。<br> 例えば、皆様に今読んでいただいているこのドキュメントもActionsを使用しています。<br></p>
+<p>具体的な説明は難しくなってしまうので、概念だけ説明します。<br> チーム開発における定期的に行われるタスクを自動化できる機能です。<br> 例えば、皆様に今読んでいただいているこのドキュメントもActionsを使用しています。<br> リポジトリにコードラボの内容をプッシュすると、コードラボの方に自動的に反映してくれる仕組みです。このおかげで、このコードラボは皆様からのプルリクエスト等を受け付けることができます。(誤った情報や追加情報等大歓迎です！)–&gt;</p>
 <h2 is-upgraded>GitHub Pages</h2>
 <p>実はGitHubは動的なWebページでなければホストしてくれちゃいます。<br> ただし、本番運用向けではないので注意してください。<br> なお、リポジトリの公開状況に関わらず、GitHub Pagesの内容は公開されます。<br> ちょっとしたプログラムを見せるだけであればかなり有用な機能なので、ぜひ使ってみてください。</p>
 <h2 is-upgraded>Web Editor</h2>
